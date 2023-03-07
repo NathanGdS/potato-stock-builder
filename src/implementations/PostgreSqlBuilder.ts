@@ -40,7 +40,7 @@ export class PostgreSqlBuilder implements IPostgreBuilder {
             }
 
             const checkValue = (value:string) => {
-                if(typeof value === 'string' && value !='NULL') {
+                if(typeof value === 'string' && value != BUILDER_CHARACTERS.NULL) {
                     return `${addSimpleComma(value)}`;
                 }
                 return value;
