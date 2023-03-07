@@ -7,7 +7,7 @@ export class PotatoBuilder<T> {
     }
 
     static createBuilder<T>(builder: T) {
-        return new PotatoBuilder(builder).builder;
+        return new PotatoBuilder<T>(builder).builder;
     }
 
     static createPostgreBuilder() {
