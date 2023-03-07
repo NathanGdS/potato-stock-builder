@@ -12,4 +12,12 @@ const rawQuery = query
     ])
     .limit(10)
     .getQuery();
+
+const query2 = query
+            .select(['name'])
+            .from('users')
+            .getQuery();
+
+
 console.log(rawQuery)
+console.log(query2)

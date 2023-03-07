@@ -62,7 +62,13 @@ export class PostgreSqlBuilder implements IPostgreBuilder {
     }
 
     getQuery(): string {
-        return this.query;
+        const oldQuery = this.query;
+        this.reset();
+        return oldQuery;
+    }
+
+    private reset(): void {
+        this.query = '';
     }
 
 }
