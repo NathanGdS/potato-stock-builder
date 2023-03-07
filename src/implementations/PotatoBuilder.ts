@@ -1,3 +1,4 @@
+import { IPostgreBuilder } from "../interfaces/IPostgreBuilder";
 import { PostgreSqlBuilder } from "./PostgreSqlBuilder";
 
 export class PotatoBuilder<T> {
@@ -10,6 +11,6 @@ export class PotatoBuilder<T> {
     }
 
     static createPostgreBuilder() {
-        return new PotatoBuilder(new PostgreSqlBuilder()).builder;
+        return PotatoBuilder.createBuilder<IPostgreBuilder>(new PostgreSqlBuilder());
     }
 }
