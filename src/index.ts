@@ -1,14 +1,7 @@
-const BUILDER_CHARACTERS = {
-    SELECT: 'SELECT',
-    FROM: 'FROM',
-    AND: 'AND',
-    WHERE: 'WHERE',
-    LIMIT: 'LIMIT',
-    NULL: 'NULL',
-    EMPTY_SPACE: ' ',
-    COMMA_AND_EMPTY_SPACE: ', '
-}
-
+import { BUILDER_CHARACTERS } from "./constants";
+import { addDoubleComma } from "./utils/addDoubleComma";
+import { addEmptySpace } from "./utils/addEmptySpace";
+import { addSimpleComma } from "./utils/addSimpleComma";
 
 class Builder {
     constructor(
@@ -18,7 +11,7 @@ class Builder {
     select(data: Array<String>): this {
         let fields = '';
         data.forEach((e, index, arr) => {
-            fields+= `${this.addDoubleComma(e as string)}`;
+            fields+= `${addDoubleComma(e as string)}`;
             if(index +1 == arr.length) {
                 fields+= BUILDER_CHARACTERS.EMPTY_SPACE;
             } else {
@@ -30,7 +23,7 @@ class Builder {
     }
 
     from(data: string): this {
-        this.query += `${BUILDER_CHARACTERS.FROM} ${this.addDoubleComma(data)} `;
+        this.query += `${BUILDER_CHARACTERS.FROM} ${addDoubleComma(data)} `;
         return this;
     }
 
@@ -38,7 +31,7 @@ class Builder {
         let fields = '';
         conditions.forEach((e, index, arr) => {
             const field = e[0].trim();
-            const operator = e[1].trim()
+            const operator = e[1].trim();
             let value = e[2];
 
             if(value == undefined || value == null) {
@@ -47,15 +40,15 @@ class Builder {
 
             const checkValue = (value:string) => {
                 if(typeof value === 'string' && value !='NULL') {
-                    return `${this.addSimpleComma(value)}`;
+                    return `${addSimpleComma(value)}`;
                 }
-                return value
+                return value;
             }
 
-            fields += `${this.addDoubleComma(field)} ${operator} ${checkValue(value)}`
-            fields = this.addSpace(fields);
+            fields += `${addDoubleComma(field)} ${operator} ${checkValue(value)}`
+            fields = addEmptySpace(fields);
             if(!(index +1 == arr.length)) {
-                fields+= this.addSpace(BUILDER_CHARACTERS.AND);
+                fields+= addEmptySpace(BUILDER_CHARACTERS.AND);
             }
         })
         this.query += `${BUILDER_CHARACTERS.WHERE} ${fields}`;
@@ -65,18 +58,6 @@ class Builder {
     limit(max: number): this {
         this.query += `${BUILDER_CHARACTERS.LIMIT} ${max}`;
         return this;
-    }
-
-    private addSpace(data: string): string {
-        return data+= BUILDER_CHARACTERS.EMPTY_SPACE;
-    }
-
-    private addDoubleComma(data: string): string {
-        return `"${data}"`;
-    }
-
-    private addSimpleComma(data: string): string {
-        return `'${data}'`;
     }
 
     getQuery() {
