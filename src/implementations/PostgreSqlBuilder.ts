@@ -1,4 +1,4 @@
-import { BUILDER_CHARACTERS } from "../constants";
+import { BUILDER_CHARACTERS as bc } from "../constants";
 import { IPostgreBuilder } from "../interfaces/IPostgreBuilder";
 import { addDoubleComma } from "../utils/addDoubleComma";
 import { addEmptySpace } from "../utils/addEmptySpace";
@@ -10,21 +10,26 @@ export class PostgreSqlBuilder implements IPostgreBuilder {
     ) { }
 
     select(data: Array<String>): this {
+        if(!data) {
+            this.query += bc.SELECT+bc.EMPTY_SPACE+bc.SELECT_ALL+bc.EMPTY_SPACE
+            return this;
+        }
+        
         let fields = '';
         data.forEach((e, index, arr) => {
             fields+= `${addDoubleComma(e as string)}`;
             if(index +1 == arr.length) {
-                fields+= BUILDER_CHARACTERS.EMPTY_SPACE;
+                fields+= bc.EMPTY_SPACE;
             } else {
-                fields+= BUILDER_CHARACTERS.COMMA_AND_EMPTY_SPACE;
+                fields+= bc.COMMA_AND_EMPTY_SPACE;
             }
         })
-        this.query += `${BUILDER_CHARACTERS.SELECT} ${fields}`;
+        this.query += `${bc.SELECT} ${fields}`;
         return this;
     }
 
     from(data: string): this {
-        this.query += `${BUILDER_CHARACTERS.FROM} ${addDoubleComma(data)} `;
+        this.query += `${bc.FROM} ${addDoubleComma(data)} `;
         return this;
     }
 
@@ -36,11 +41,11 @@ export class PostgreSqlBuilder implements IPostgreBuilder {
             let value = e[2];
 
             if(value == undefined || value == null) {
-                value = BUILDER_CHARACTERS.NULL;
+                value = bc.NULL;
             }
 
             const checkValue = (value:string) => {
-                if(typeof value === 'string' && value != BUILDER_CHARACTERS.NULL) {
+                if(typeof value === 'string' && value != bc.NULL) {
                     return `${addSimpleComma(value)}`;
                 }
                 return value;
@@ -49,15 +54,15 @@ export class PostgreSqlBuilder implements IPostgreBuilder {
             fields += `${addDoubleComma(field)} ${operator} ${checkValue(value)}`
             fields = addEmptySpace(fields);
             if(!(index +1 == arr.length)) {
-                fields+= addEmptySpace(BUILDER_CHARACTERS.AND);
+                fields+= addEmptySpace(bc.AND);
             }
         })
-        this.query += `${BUILDER_CHARACTERS.WHERE} ${fields}`;
+        this.query += `${bc.WHERE} ${fields}`;
         return this;
     }
 
     limit(max: number): this {
-        this.query += `${BUILDER_CHARACTERS.LIMIT} ${max}`;
+        this.query += `${bc.LIMIT} ${max}`;
         return this;
     }
 

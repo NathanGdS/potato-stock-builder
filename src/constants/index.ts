@@ -1,5 +1,6 @@
 export const BUILDER_CHARACTERS = {
     SELECT: 'SELECT',
+    SELECT_ALL: '*',
     FROM: 'FROM',
     AND: 'AND',
     WHERE: 'WHERE',
